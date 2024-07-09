@@ -4,6 +4,7 @@
     <title>Assignment Submission</title>
     <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
     <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
 </head>
 <body>
     <h2>Assignment Submission Form</h2>
@@ -50,23 +51,46 @@
             beijing_tz = pytz.timezone('Asia/Shanghai')
             submission_time = datetime.now(beijing_tz).strftime('%Y-%m-%d %H:%M:%S')
 
-            # Simulate file upload to OneDrive
-            file_path = f"/onedrive/path/{file.name}"
+            # 파일 업로드를 위해 JavaScript 함수를 호출합니다.
+            file_path = await js.upload_to_sharepoint(file)
 
+            # XML 파일 생성
             xml_data = create_xml(name, student_id, advisor, submission_time, file_path)
             xml_filename = f"{student_id}_submission.xml"
             with open(xml_filename, 'w') as xml_file:
                 xml_file.write(xml_data)
 
-            # Simulate XML file upload to OneDrive
-            xml_file_path = f"/onedrive/path/{xml_filename}"
+            # XML 파일 업로드를 위해 JavaScript 함수를 호출합니다.
+            await js.upload_to_sharepoint(js.File.new([xml_data], xml_filename, {type: 'text/xml'}))
 
-            # Display submission status
+            # 제출 상태 표시
             status_div = js.document.getElementById("submission-status")
             status_div.innerHTML = "Assignment successfully submitted!"
 
         form = js.document.getElementById("submission-form")
         form.addEventListener("submit", handle_form_submit)
     </py-script>
+
+    <script>
+        async function upload_to_sharepoint(file) {
+            const accessToken = 'YOUR_ACCESS_TOKEN'; // SharePoint API를 사용하기 위한 접근 토큰
+
+            const uploadUrl = "https://sustechsd-my.sharepoint.com/_api/web/GetFolderByServerRelativeUrl('/personal/seungwoo_je_sustechsd_onmicrosoft_com/EtWSv-hXJdFJhqY_yvJV73IBJ_fUKI8_oIqsE2qwHyNrqA')/Files/add(url='" + file.name + "',overwrite=true)";
+
+            const headers = {
+                "Accept": "application/json;odata=verbose",
+                "Authorization": "Bearer " + accessToken,
+                "Content-Type": file.type
+            };
+
+            const response = await axios.post(uploadUrl, file, { headers: headers });
+
+            if (response.status === 200) {
+                return response.data.d.ServerRelativeUrl;
+            } else {
+                throw new Error('File upload failed');
+            }
+        }
+    </script>
 </body>
 </html>
