@@ -83,7 +83,7 @@ def commit_to_git(student_id, filename, xml_filename, submission_time):
 
 if __name__ == '__main__':
     app.run(debug=True)
-    </py-script>
+
 
 def commit_to_git(student_id, filename, xml_filename, submission_time):
     repo = git.Repo('path/to/repo')
@@ -92,6 +92,7 @@ def commit_to_git(student_id, filename, xml_filename, submission_time):
     commit_message = f'Submission by {student_id} at {submission_time}'
     repo.index.commit(commit_message)
     repo.remote().push()
-    
+
+    </py-script>
 </body>
 </html>
