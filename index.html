@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Assignment Submission</title>
+    <title>Assignment Submission and Download</title>
     <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
     <script defer src="https://pyscript.net/latest/pyscript.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <script src="https://gosspublic.alicdn.com/aliyun-oss-sdk-6.1.0.min.js"></script>
 </head>
 <body>
     <h2>Assignment Submission Form</h2>
@@ -22,10 +23,15 @@
 
     <div id="submission-status"></div>
 
+    <h2>Download Files</h2>
+    <button onclick="list_files()">List Files</button>
+    <div id="file-list"></div>
+
     <py-script>
         from datetime import datetime
         import pytz
         import xml.etree.ElementTree as ET
+        import os
         import js
 
         def create_xml(name, student_id, advisor, submission_time, file_path):
@@ -52,7 +58,7 @@
             submission_time = datetime.now(beijing_tz).strftime('%Y-%m-%d %H:%M:%S')
 
             # 파일 업로드를 위해 JavaScript 함수를 호출합니다.
-            file_path = await js.upload_to_sharepoint(file)
+            file_path = await js.upload_to_oss(file)
 
             # XML 파일 생성
             xml_data = create_xml(name, student_id, advisor, submission_time, file_path)
@@ -61,7 +67,7 @@
                 xml_file.write(xml_data)
 
             # XML 파일 업로드를 위해 JavaScript 함수를 호출합니다.
-            await js.upload_to_sharepoint(js.File.new([xml_data], xml_filename, {type: 'text/xml'}))
+            await js.upload_to_oss(js.File.new([xml_data], xml_filename, {type: 'text/xml'}))
 
             # 제출 상태 표시
             status_div = js.document.getElementById("submission-status")
@@ -72,23 +78,50 @@
     </py-script>
 
     <script>
-        async function upload_to_sharepoint(file) {
-            const accessToken = 'YOUR_ACCESS_TOKEN'; // SharePoint API를 사용하기 위한 접근 토큰
+        const accessKeyId = 'LTAI5tK3N2tYt6rC1YPVeyXh'; // Alibaba Cloud 액세스 키 ID
+        const accessKeySecret = 'zssSVTQ0Q6fXT8GZ2JwhajpiicbD9p'; // Alibaba Cloud 액세스 키 시크릿
+        const bucketName = 'submission1105'; // OSS 버킷 이름
+        const region = 'oss-ap-northeast-2'; // OSS 리전 (서울은 'oss-ap-northeast-2')
 
-            const uploadUrl = "https://sustechsd-my.sharepoint.com/_api/web/GetFolderByServerRelativeUrl('/personal/seungwoo_je_sustechsd_onmicrosoft_com/EtWSv-hXJdFJhqY_yvJV73IBJ_fUKI8_oIqsE2qwHyNrqA')/Files/add(url='" + file.name + "',overwrite=true)";
+        const client = new OSS({
+            region: region,
+            accessKeyId: accessKeyId,
+            accessKeySecret: accessKeySecret,
+            bucket: bucketName
+        });
 
-            const headers = {
-                "Accept": "application/json;odata=verbose",
-                "Authorization": "Bearer " + accessToken,
-                "Content-Type": file.type
-            };
-
-            const response = await axios.post(uploadUrl, file, { headers: headers });
-
-            if (response.status === 200) {
-                return response.data.d.ServerRelativeUrl;
-            } else {
+        async function upload_to_oss(file) {
+            try {
+                // 파일 업로드
+                const result = await client.put(file.name, file);
+                return result.url; // 업로드된 파일의 URL 반환
+            } catch (err) {
+                console.error(err);
                 throw new Error('File upload failed');
+            }
+        }
+
+        async function list_files() {
+            try {
+                const result = await client.list();
+                const files = result.objects;
+                const file_list_div = document.getElementById("file-list");
+                file_list_div.innerHTML = "";
+
+                files.forEach(file => {
+                    const file_url = client.signatureUrl(file.name);
+                    const file_link = document.createElement("a");
+                    file_link.href = file_url;
+                    file_link.textContent = file.name;
+                    file_link.download = file.name;
+
+                    const list_item = document.createElement("div");
+                    list_item.appendChild(file_link);
+                    file_list_div.appendChild(list_item);
+                });
+            } catch (err) {
+                console.error(err);
+                document.getElementById("file-list").innerText = "Failed to list files.";
             }
         }
     </script>
