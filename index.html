@@ -2,97 +2,71 @@
 <html>
 <head>
     <title>Assignment Submission</title>
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
 </head>
 <body>
     <h2>Assignment Submission Form</h2>
-    <form action="/submit_assignment" method="post" enctype="multipart/form-data">
+    <form id="submission-form">
         <label for="name">Name:</label><br>
         <input type="text" id="name" name="name" required><br>
         <label for="student_id">Student ID:</label><br>
         <input type="text" id="student_id" name="student_id" required><br>
-        <label for="Supervisor">Supervisor:</label><br>
-        <input type="text" id="Supervisor" name="Supervisor" required><br>
-        <label for="submission_date">Submission Date:</label><br>
-        <input type="date" id="submission_date" name="submission_date" required><br>
+        <label for="advisor">Advisor:</label><br>
+        <input type="text" id="advisor" name="advisor" required><br>
         <label for="file">File:</label><br>
         <input type="file" id="file" name="file" required><br><br>
         <input type="submit" value="Submit">
     </form>
+
+    <div id="submission-status"></div>
+
     <py-script>
-from flask import Flask, request, redirect, url_for
-from datetime import datetime
-import pytz
-import onedrive
-import git
-import xml.etree.ElementTree as ET
+        from datetime import datetime
+        import pytz
+        import xml.etree.ElementTree as ET
+        import js
 
-app = Flask(__name__)
+        def create_xml(name, student_id, advisor, submission_time, file_path):
+            submission = ET.Element("submission")
+            ET.SubElement(submission, "name").text = name
+            ET.SubElement(submission, "student_id").text = student_id
+            ET.SubElement(submission, "advisor").text = advisor
+            ET.SubElement(submission, "submission_time").text = submission_time
+            ET.SubElement(submission, "file_path").text = file_path
+            return ET.tostring(submission, encoding='unicode', method='xml')
 
-# OneDrive 설정
-onedrive_client = onedrive.Client(client_id='YOUR_CLIENT_ID', client_secret='YOUR_CLIENT_SECRET', redirect_uri='YOUR_REDIRECT_URI')
+        async def handle_form_submit(event):
+            event.preventDefault()
 
-@app.route('/submit_assignment', methods=['POST'])
-def submit_assignment():
-    name = request.form['name']
-    student_id = request.form['student_id']
-    advisor = request.form['advisor']
-    file = request.files['file']
+            form = js.document.getElementById("submission-form")
+            formData = js.FormData.new(form)
 
-    # 베이징 시간으로 현재 시간 가져오기
-    beijing_tz = pytz.timezone('Asia/Shanghai')
-    submission_time = datetime.now(beijing_tz).strftime('%Y-%m-%d %H:%M:%S')
+            name = formData.get("name")
+            student_id = formData.get("student_id")
+            advisor = formData.get("advisor")
+            file = formData.get("file")
 
-    # OneDrive에 파일 업로드
-    file_path = onedrive_client.upload(file.filename, file.stream)
+            beijing_tz = pytz.timezone('Asia/Shanghai')
+            submission_time = datetime.now(beijing_tz).strftime('%Y-%m-%d %H:%M:%S')
 
-    # XML 파일 생성
-    xml_data = create_xml(name, student_id, advisor, submission_time, file_path)
-    xml_filename = f"{student_id}_submission.xml"
-    with open(xml_filename, 'w') as xml_file:
-        xml_file.write(xml_data)
+            # Simulate file upload to OneDrive
+            file_path = f"/onedrive/path/{file.name}"
 
-    # XML 파일 업로드
-    onedrive_client.upload(xml_filename, open(xml_filename, 'rb'))
+            xml_data = create_xml(name, student_id, advisor, submission_time, file_path)
+            xml_filename = f"{student_id}_submission.xml"
+            with open(xml_filename, 'w') as xml_file:
+                xml_file.write(xml_data)
 
-    # 과제 정보를 Git에 커밋
-    commit_to_git(student_id, file.filename, xml_filename, submission_time)
+            # Simulate XML file upload to OneDrive
+            xml_file_path = f"/onedrive/path/{xml_filename}"
 
-    return redirect(url_for('submission_success'))
+            # Display submission status
+            status_div = js.document.getElementById("submission-status")
+            status_div.innerHTML = "Assignment successfully submitted!"
 
-@app.route('/submission_success')
-def submission_success():
-    return "Assignment successfully submitted!"
-
-def create_xml(name, student_id, advisor, submission_time, file_path):
-    submission = ET.Element("submission")
-    ET.SubElement(submission, "name").text = name
-    ET.SubElement(submission, "student_id").text = student_id
-    ET.SubElement(submission, "advisor").text = advisor
-    ET.SubElement(submission, "submission_time").text = submission_time
-    ET.SubElement(submission, "file_path").text = file_path
-
-    return ET.tostring(submission, encoding='unicode', method='xml')
-
-def commit_to_git(student_id, filename, xml_filename, submission_time):
-    repo = git.Repo('path/to/repo')
-    repo.git.add('path/to/' + filename)
-    repo.git.add('path/to/' + xml_filename)
-    commit_message = f'Submission by {student_id} at {submission_time}'
-    repo.index.commit(commit_message)
-    repo.remote().push()
-
-if __name__ == '__main__':
-    app.run(debug=True)
-
-
-def commit_to_git(student_id, filename, xml_filename, submission_time):
-    repo = git.Repo('path/to/repo')
-    repo.git.add('path/to/' + filename)
-    repo.git.add('path/to/' + xml_filename)
-    commit_message = f'Submission by {student_id} at {submission_time}'
-    repo.index.commit(commit_message)
-    repo.remote().push()
-
+        form = js.document.getElementById("submission-form")
+        form.addEventListener("submit", handle_form_submit)
     </py-script>
 </body>
 </html>
