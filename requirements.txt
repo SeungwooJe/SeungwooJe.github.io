@@ -1,0 +1,4 @@
+Flask
+oss2
+python-dotenv
+gunicorn
