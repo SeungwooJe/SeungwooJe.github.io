@@ -13,6 +13,9 @@ ACCESS_KEY_SECRET = os.getenv('OSS_ACCESS_KEY_SECRET')
 BUCKET_NAME = os.getenv('BUCKET_NAME')
 REGION = os.getenv('REGION')
 
+# File size limit: 100MB
+app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024
+
 auth = oss2.Auth(ACCESS_KEY_ID, ACCESS_KEY_SECRET)
 bucket = oss2.Bucket(auth, f'https://{REGION}.aliyuncs.com', BUCKET_NAME)
 
@@ -21,14 +24,30 @@ def upload_file():
     file = request.files['file']
     name = request.form['name']
     student_id = request.form['student_id']
+    email = request.form['email']
+    
+    # Check if student_id is numeric
+    if not student_id.isdigit():
+        return jsonify({'error': 'Student ID must be numeric'}), 400
+
     file_name = f"{name}_{student_id}.{file.filename.split('.')[-1]}"
 
     try:
         bucket.put_object(file_name, file)
         file_url = bucket.sign_url('GET', file_name, 3600)
         return jsonify({'url': file_url, 'message': 'File successfully uploaded'}), 200
+    except oss2.exceptions.RequestError as e:
+        return jsonify({'error': 'Request error', 'details': str(e)}), 500
+    except oss2.exceptions.NoSuchBucket as e:
+        return jsonify({'error': 'No such bucket', 'details': str(e)}), 500
+    except oss2.exceptions.InvalidAccessKeyId as e:
+        return jsonify({'error': 'Invalid Access Key ID', 'details': str(e)}), 500
+    except oss2.exceptions.InvalidSecurityToken as e:
+        return jsonify({'error': 'Invalid Security Token', 'details': str(e)}), 500
+    except oss2.exceptions.AccessDenied as e:
+        return jsonify({'error': 'Access Denied', 'details': str(e)}), 500
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': 'Unknown error', 'details': str(e)}), 500
 
 @app.route('/list_files', methods=['GET'])
 def list_files():
