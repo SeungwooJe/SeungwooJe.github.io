@@ -19,12 +19,14 @@ bucket = oss2.Bucket(auth, f'https://{REGION}.aliyuncs.com', BUCKET_NAME)
 @app.route('/upload', methods=['POST'])
 def upload_file():
     file = request.files['file']
-    file_name = file.filename
+    name = request.form['name']
+    student_id = request.form['student_id']
+    file_name = f"{name}_{student_id}.{file.filename.split('.')[-1]}"
 
     try:
         bucket.put_object(file_name, file)
         file_url = bucket.sign_url('GET', file_name, 3600)
-        return jsonify({'url': file_url}), 200
+        return jsonify({'url': file_url, 'message': 'File successfully uploaded'}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
