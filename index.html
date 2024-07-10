@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>DS Submission</title>
-    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
-    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+    <title>Assignment Submission and Download</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
-    <script src="https://gosspublic.alicdn.com/aliyun-oss-sdk-6.1.0.min.js"></script>
 </head>
 <body>
-    <h2>Submission</h2>
+    <h2>Assignment Submission Form</h2>
     <form id="submission-form">
         <label for="name">Name:</label><br>
         <input type="text" id="name" name="name" required><br>
@@ -27,102 +24,95 @@
     <button onclick="list_files()">List Files</button>
     <div id="file-list"></div>
 
-    <py-script>
-        from datetime import datetime
-        import pytz
-        import xml.etree.ElementTree as ET
-        import os
-        import js
-
-        def create_xml(name, student_id, advisor, submission_time, file_path):
-            submission = ET.Element("submission")
-            ET.SubElement(submission, "name").text = name
-            ET.SubElement(submission, "student_id").text = student_id
-            ET.SubElement(submission, "advisor").text = advisor
-            ET.SubElement(submission, "submission_time").text = submission_time
-            ET.SubElement(submission, "file_path").text = file_path
-            return ET.tostring(submission, encoding='unicode', method='xml')
-
-        async def handle_form_submit(event):
-            event.preventDefault()
-
-            form = js.document.getElementById("submission-form")
-            formData = js.FormData.new(form)
-
-            name = formData.get("name")
-            student_id = formData.get("student_id")
-            advisor = formData.get("advisor")
-            file = formData.get("file")
-
-            beijing_tz = pytz.timezone('Asia/Shanghai')
-            submission_time = datetime.now(beijing_tz).strftime('%Y-%m-%d %H:%M:%S')
-
-            # 파일 업로드를 위해 JavaScript 함수를 호출합니다.
-            file_path = await js.upload_to_oss(file)
-
-            # XML 파일 생성
-            xml_data = create_xml(name, student_id, advisor, submission_time, file_path)
-            xml_filename = f"{student_id}_submission.xml"
-            with open(xml_filename, 'w') as xml_file:
-                xml_file.write(xml_data)
-
-            # XML 파일 업로드를 위해 JavaScript 함수를 호출합니다.
-            await js.upload_to_oss(js.File.new([xml_data], xml_filename, {type: 'text/xml'}))
-
-            # 제출 상태 표시
-            status_div = js.document.getElementById("submission-status")
-            status_div.innerHTML = "Assignment successfully submitted!"
-
-        form = js.document.getElementById("submission-form")
-        form.addEventListener("submit", handle_form_submit)
-    </py-script>
-
     <script>
-        const accessKeyId = 'LTAI5tK3N2tYt6rC1YPVeyXh'; // Alibaba Cloud 액세스 키 ID
-        const accessKeySecret = 'zssSVTQ0Q6fXT8GZ2JwhajpiicbD9p'; // Alibaba Cloud 액세스 키 시크릿
-        const bucketName = 'submission1105'; // OSS 버킷 이름
-        const region = 'oss-ap-northeast-2'; // OSS 리전 (서울은 'oss-ap-northeast-2')
+        document.getElementById('submission-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
 
-        const client = new OSS({
-            region: region,
-            accessKeyId: accessKeyId,
-            accessKeySecret: accessKeySecret,
-            bucket: bucketName
-        });
+            const form = event.target;
+            const formData = new FormData(form);
 
-        async function upload_to_oss(file) {
+            const name = formData.get('name');
+            const student_id = formData.get('student_id');
+            const advisor = formData.get('advisor');
+            const file = formData.get('file');
+
             try {
-                // 파일 업로드
-                const result = await client.put(file.name, file);
-                return result.url; // 업로드된 파일의 URL 반환
-            } catch (err) {
-                console.error(err);
-                throw new Error('File upload failed');
+                const response = await axios.post('/upload', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+
+                const file_url = response.data.url;
+
+                const xml_data = new Blob([create_xml(name, student_id, advisor, new Date(), file_url)], {type: 'text/xml'});
+                const xml_formData = new FormData();
+                xml_formData.append('file', xml_data, `${student_id}_submission.xml`);
+
+                await axios.post('/upload', xml_formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+
+                document.getElementById('submission-status').innerText = 'Assignment successfully submitted!';
+            } catch (error) {
+                console.error(error);
+                document.getElementById('submission-status').innerText = 'Failed to submit assignment.';
             }
-        }
+        });
 
         async function list_files() {
             try {
-                const result = await client.list();
-                const files = result.objects;
-                const file_list_div = document.getElementById("file-list");
-                file_list_div.innerHTML = "";
+                const response = await axios.get('/list_files');
+                const files = response.data;
+
+                const file_list_div = document.getElementById('file-list');
+                file_list_div.innerHTML = '';
 
                 files.forEach(file => {
-                    const file_url = client.signatureUrl(file.name);
-                    const file_link = document.createElement("a");
-                    file_link.href = file_url;
+                    const file_link = document.createElement('a');
+                    file_link.href = file.url;
                     file_link.textContent = file.name;
                     file_link.download = file.name;
 
-                    const list_item = document.createElement("div");
+                    const list_item = document.createElement('div');
                     list_item.appendChild(file_link);
                     file_list_div.appendChild(list_item);
                 });
-            } catch (err) {
-                console.error(err);
-                document.getElementById("file-list").innerText = "Failed to list files.";
+            } catch (error) {
+                console.error(error);
+                document.getElementById('file-list').innerText = 'Failed to list files.';
             }
+        }
+
+        function create_xml(name, student_id, advisor, submission_time, file_path) {
+            const xmlDoc = document.implementation.createDocument('', '', null);
+            const submission = xmlDoc.createElement('submission');
+
+            const nameElem = xmlDoc.createElement('name');
+            nameElem.textContent = name;
+            submission.appendChild(nameElem);
+
+            const studentIdElem = xmlDoc.createElement('student_id');
+            studentIdElem.textContent = student_id;
+            submission.appendChild(studentIdElem);
+
+            const advisorElem = xmlDoc.createElement('advisor');
+            advisorElem.textContent = advisor;
+            submission.appendChild(advisorElem);
+
+            const submissionTimeElem = xmlDoc.createElement('submission_time');
+            submissionTimeElem.textContent = submission_time.toISOString();
+            submission.appendChild(submissionTimeElem);
+
+            const filePathElem = xmlDoc.createElement('file_path');
+            filePathElem.textContent = file_path;
+            submission.appendChild(filePathElem);
+
+            return new XML#### `index.html` (계속)
+```html
+            return new XMLSerializer().serializeToString(submission);
         }
     </script>
 </body>
