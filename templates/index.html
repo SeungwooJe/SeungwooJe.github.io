@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>DS Submission and Download</title>
+    <title>Submission Form - DS Student Research Sharing 2024 </title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
 </head>
 <body>
-    <h2>Submission Form</h2>
+    <h2>Assignment Submission Form</h2>
     <form id="submission-form">
         <label for="name">Name:</label><br>
         <input type="text" id="name" name="name" required><br>
         <label for="student_id">Student ID:</label><br>
-        <input type="text" id="student_id" name="student_id" required><br>
-        <label for="advisor">Supervisor:</label><br>
-        <input type="text" id="advisor" name="advisor" required><br>
+        <input type="text" id="student_id" name="student_id" required pattern="\d*"><br>
+        <label for="supervisor">Supervisor/Lecturer:</label><br>
+        <input type="text" id="supervisor" name="supervisor" required><br>
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" required><br>
         <label for="file">File:</label><br>
         <input type="file" id="file" name="file" required><br><br>
         <input type="submit" value="Submit">
@@ -31,11 +33,6 @@
             const form = event.target;
             const formData = new FormData(form);
 
-            const name = formData.get('name');
-            const student_id = formData.get('student_id');
-            const advisor = formData.get('advisor');
-            const file = formData.get('file');
-
             try {
                 const response = await axios.post('/upload', formData, {
                     headers: {
@@ -43,22 +40,14 @@
                     }
                 });
 
-                const file_url = response.data.url;
-
-                const xml_data = new Blob([create_xml(name, student_id, advisor, new Date(), file_url)], {type: 'text/xml'});
-                const xml_formData = new FormData();
-                xml_formData.append('file', xml_data, `${student_id}_submission.xml`);
-
-                await axios.post('/upload', xml_formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                });
-
-                document.getElementById('submission-status').innerText = 'Assignment successfully submitted!';
+                if (response.status === 200) {
+                    document.getElementById('submission-status').innerText = 'Assignment successfully submitted!';
+                } else {
+                    document.getElementById('submission-status').innerText = `Failed to submit assignment: ${response.data.error}`;
+                }
             } catch (error) {
                 console.error(error);
-                document.getElementById('submission-status').innerText = 'Failed to submit assignment.';
+                document.getElementById('submission-status').innerText = `Failed to submit assignment: ${error.response.data.error}`;
             }
         });
 
@@ -84,33 +73,6 @@
                 console.error(error);
                 document.getElementById('file-list').innerText = 'Failed to list files.';
             }
-        }
-
-        function create_xml(name, student_id, advisor, submission_time, file_path) {
-            const xmlDoc = document.implementation.createDocument('', '', null);
-            const submission = xmlDoc.createElement('submission');
-
-            const nameElem = xmlDoc.createElement('name');
-            nameElem.textContent = name;
-            submission.appendChild(nameElem);
-
-            const studentIdElem = xmlDoc.createElement('student_id');
-            studentIdElem.textContent = student_id;
-            submission.appendChild(studentIdElem);
-
-            const advisorElem = xmlDoc.createElement('advisor');
-            advisorElem.textContent = advisor;
-            submission.appendChild(advisorElem);
-
-            const submissionTimeElem = xmlDoc.createElement('submission_time');
-            submissionTimeElem.textContent = submission_time.toISOString();
-            submission.appendChild(submissionTimeElem);
-
-            const filePathElem = xmlDoc.createElement('file_path');
-            filePathElem.textContent = file_path;
-            submission.appendChild(filePathElem);
-
-            return new XMLSerializer().serializeToString(submission);
         }
     </script>
 </body>
