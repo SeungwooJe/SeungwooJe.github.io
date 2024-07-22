@@ -1,79 +1,69 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Submission Form</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSS File Upload</title>
+    <style>
+        .app-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/ali-oss/dist/aliyun-oss-sdk.min.js"></script>
 </head>
+
 <body>
-    <h2>Submission Form - DS Student Research Sharing 2024 </h2>
-    <form id="submission-form">
-        <label for="name">Name:</label><br>
-        <input type="text" id="name" name="name" required><br>
-        <label for="student_id">Student ID:</label><br>
-        <input type="text" id="student_id" name="student_id" required pattern="\d*"><br>
-        <label for="supervisor">Supervisor/Lecturer:</label><br>
-        <input type="text" id="supervisor" name="supervisor" required><br>
-        <label for="email">Email:</label><br>
-        <input type="email" id="email" name="email" required><br>
-        <label for="file">File:</label><br>
-        <input type="file" id="file" name="file" required><br><br>
-        <input type="submit" value="Submit">
-    </form>
-
-    <div id="submission-status"></div>
-
-    <h2>Download Files</h2>
-    <button onclick="list_files()">List Files</button>
-    <div id="file-list"></div>
+    <div class="app-header">
+        <input type="file" id="fileInput" class="hidden" />
+        <button onclick="document.getElementById('fileInput').click()">Select File</button>
+        <button id="uploadButton" onclick="handleFileUpload()" disabled>Upload File</button>
+    </div>
 
     <script>
-        document.getElementById('submission-form').addEventListener('submit', async function(event) {
-            event.preventDefault();
+        let selectedFile = null;
 
-            const form = event.target;
-            const formData = new FormData(form);
-
-            try {
-                const response = await axios.post('/upload', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                });
-
-                if (response.status === 200) {
-                    document.getElementById('submission-status').innerText = 'Assignment successfully submitted!';
-                } else {
-                    document.getElementById('submission-status').innerText = `Failed to submit assignment: ${response.data.error}`;
-                }
-            } catch (error) {
-                console.error(error);
-                document.getElementById('submission-status').innerText = `Failed to submit assignment: ${error.response.data.error}`;
-            }
+        document.getElementById('fileInput').addEventListener('change', (event) => {
+            selectedFile = event.target.files[0];
+            document.getElementById('uploadButton').disabled = !selectedFile;
         });
 
-        async function list_files() {
+        async function handleFileUpload() {
+            if (!selectedFile) {
+                alert('Please select a file first!');
+                return;
+            }
+
+            const client = new OSS({
+                region: 'OSS_REGION_PLACEHOLDER',
+                accessKeyId: 'OSS_ACCESS_KEY_ID_PLACEHOLDER',
+                accessKeySecret: 'OSS_ACCESS_KEY_SECRET_PLACEHOLDER',
+                bucket: 'OSS_BUCKET_PLACEHOLDER'
+            });
+
             try {
-                const response = await axios.get('/list_files');
-                const files = response.data;
+                const uploadResult = await client.put(selectedFile.name, selectedFile);
+                console.log('Upload succeeded:', uploadResult);
 
-                const file_list_div = document.getElementById('file-list');
-                file_list_div.innerHTML = '';
+                // Optional: Download the object to verify the upload
+                const getResult = await client.get(selectedFile.name);
+                console.log('Object downloaded:', getResult);
 
-                files.forEach(file => {
-                    const file_link = document.createElement('a');
-                    file_link.href = file.url;
-                    file_link.textContent = file.name;
-                    file_link.download = file.name;
-
-                    const list_item = document.createElement('div');
-                    list_item.appendChild(file_link);
-                    file_list_div.appendChild(list_item);
-                });
+                alert(`File uploaded successfully: ${uploadResult.url}`);
             } catch (error) {
-                console.error(error);
-                document.getElementById('file-list').innerText = 'Failed to list files.';
+                console.error('Error:', error);
+                alert('File upload failed');
             }
         }
     </script>
 </body>
+
 </html>
