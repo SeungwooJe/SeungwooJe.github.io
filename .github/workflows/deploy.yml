@@ -1,9 +1,20 @@
 name: Deploy to GitHub Pages
 
 on:
-  push:
-    branches:
-      - main
+  workflow_call:
+    secrets:
+      OSS_REGION:
+        description: 'The OSS region'
+        required: true
+      OSS_ACCESS_KEY_ID:
+        description: 'The OSS access key ID'
+        required: true
+      OSS_ACCESS_KEY_SECRET:
+        description: 'The OSS access key secret'
+        required: true
+      OSS_BUCKET:
+        description: 'The OSS bucket'
+        required: true
 
 jobs:
   build:
@@ -27,6 +38,9 @@ jobs:
           sed -i 's/OSS_ACCESS_KEY_ID_PLACEHOLDER/${{ secrets.OSS_ACCESS_KEY_ID }}/g' index.html
           sed -i 's/OSS_ACCESS_KEY_SECRET_PLACEHOLDER/${{ secrets.OSS_ACCESS_KEY_SECRET }}/g' index.html
           sed -i 's/OSS_BUCKET_PLACEHOLDER/${{ secrets.OSS_BUCKET }}/g' index.html
+
+      - name: Print index.html for debugging
+        run: cat index.html
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
