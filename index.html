@@ -42,13 +42,23 @@
                 return;
             }
 
-            const client = new OSS({
-                region: 'OSS_REGION_PLACEHOLDER',
-                accessKeyId: 'OSS_ACCESS_KEY_ID_PLACEHOLDER',
-                accessKeySecret: 'OSS_ACCESS_KEY_SECRET_PLACEHOLDER',
-                bucket: 'OSS_BUCKET_PLACEHOLDER'
-            });
+            const region = 'OSS_REGION_PLACEHOLDER';
+            const accessKeyId = 'OSS_ACCESS_KEY_ID_PLACEHOLDER';
+            const accessKeySecret = 'OSS_ACCESS_KEY_SECRET_PLACEHOLDER';
+            const bucket = 'OSS_BUCKET_PLACEHOLDER';
 
+            // Debugging: Print placeholder values to the console
+            console.log('OSS Region:', region);
+            console.log('OSS Access Key ID:', accessKeyId);
+            console.log('OSS Access Key Secret:', accessKeySecret);
+            console.log('OSS Bucket:', bucket);
+
+            const client = new OSS({
+                region: region,
+                accessKeyId: accessKeyId,
+                accessKeySecret: accessKeySecret,
+                bucket: bucket
+            });
             try {
                 const uploadResult = await client.put(selectedFile.name, selectedFile);
                 console.log('Upload succeeded:', uploadResult);
