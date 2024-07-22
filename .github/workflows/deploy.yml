@@ -23,10 +23,10 @@ jobs:
 
       - name: Replace secrets in HTML
         run: |
-          sed -i 's/OSS_REGION_PLACEHOLDER/${{ secrets.OSS_REGION }}/' index.html
-          sed -i 's/OSS_ACCESS_KEY_ID_PLACEHOLDER/${{ secrets.OSS_ACCESS_KEY_ID }}/' index.html
-          sed -i 's/OSS_ACCESS_KEY_SECRET_PLACEHOLDER/${{ secrets.OSS_ACCESS_KEY_SECRET }}/' index.html
-          sed -i 's/OSS_BUCKET_PLACEHOLDER/${{ secrets.OSS_BUCKET }}/' index.html
+          sed -i 's/OSS_REGION_PLACEHOLDER/${{ secrets.OSS_REGION }}/g' index.html
+          sed -i 's/OSS_ACCESS_KEY_ID_PLACEHOLDER/${{ secrets.OSS_ACCESS_KEY_ID }}/g' index.html
+          sed -i 's/OSS_ACCESS_KEY_SECRET_PLACEHOLDER/${{ secrets.OSS_ACCESS_KEY_SECRET }}/g' index.html
+          sed -i 's/OSS_BUCKET_PLACEHOLDER/${{ secrets.OSS_BUCKET }}/g' index.html
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
