@@ -1,0 +1,60 @@
+.list-head .join-highlight {
+  font-weight: 400 !important;
+}
+
+.list-head .join-highlight strong {
+  font-weight: 700;
+  box-shadow: inset 0 -.3em 0 #ffeb00;
+}
+
+.list-head > p:first-of-type strong {
+  box-shadow: none !important;
+}
+
+.team-homepage {
+  display: grid;
+  flex: 0 0 auto;
+  width: 23px;
+  height: 23px;
+  place-items: center;
+  color: #555;
+  text-decoration: none;
+}
+
+.team-homepage svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.team-homepage:hover,
+.team-homepage:focus-visible {
+  color: #3965b0;
+}
+
+.team-name-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.team-name-row h2 {
+  margin: 0;
+}
+
+.team-photo-placeholder {
+  display: grid;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  place-items: center;
+  color: #555;
+  background: #eee;
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -.04em;
+}

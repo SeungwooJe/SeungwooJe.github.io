@@ -1,79 +1,48 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OSS File Upload</title>
-    <style>
-        .app-header {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-
-        .hidden {
-            display: none;
-        }
-    </style>
-    <script src="https://cdn.jsdelivr.net/npm/ali-oss/dist/aliyun-oss-sdk.min.js"></script>
-</head>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Immersive Design Group — SUSTech</title>
+  <link rel="stylesheet" href="wonder.css">
+  <link rel="stylesheet" href="header-motion.css">
+  <link rel="stylesheet" href="intro.css">
+  <link rel="stylesheet" href="intro-width.css">
+  <link rel="stylesheet" href="divider-consistency.css">
+<link rel="stylesheet" href="typography.css"><link rel="stylesheet" href="font-base.css"><link rel="stylesheet" href="rhythm.css"><link rel="stylesheet" href="home-layout.css"><link rel="stylesheet" href="home-polish.css"><link rel="stylesheet" href="interaction-fixes.css"><link rel="stylesheet" href="publication-home-tune.css"><link rel="stylesheet" href="nav-active.css"><link rel="stylesheet" href="longform.css"></head>
 <body>
-    <div class="app-header">
-        <input type="file" id="fileInput" class="hidden" />
-        <button onclick="document.getElementById('fileInput').click()">Select File</button>
-        <button id="uploadButton" onclick="handleFileUpload()" disabled>Upload File</button>
-    </div>
-
-    <script>
-        let selectedFile = null;
-
-        document.getElementById('fileInput').addEventListener('change', (event) => {
-            selectedFile = event.target.files[0];
-            document.getElementById('uploadButton').disabled = !selectedFile;
-        });
-
-        async function handleFileUpload() {
-            if (!selectedFile) {
-                alert('Please select a file first!');
-                return;
-            }
-
-            const region = 'OSS_REGION_PLACEHOLDER';
-            const accessKeyId = 'OSS_ACCESS_KEY_ID_PLACEHOLDER';
-            const accessKeySecret = 'OSS_ACCESS_KEY_SECRET_PLACEHOLDER';
-            const bucket = 'OSS_BUCKET_PLACEHOLDER';
-
-            // Debugging: Print placeholder values to the console
-            console.log('OSS Region:', region);
-            console.log('OSS Access Key ID:', accessKeyId);
-            console.log('OSS Access Key Secret:', accessKeySecret);
-            console.log('OSS Bucket:', bucket);
-
-            const client = new OSS({
-                region: region,
-                accessKeyId: accessKeyId,
-                accessKeySecret: accessKeySecret,
-                bucket: bucket
-            });
-            try {
-                const uploadResult = await client.put(selectedFile.name, selectedFile);
-                console.log('Upload succeeded:', uploadResult);
-
-                // Optional: Download the object to verify the upload
-                const getResult = await client.get(selectedFile.name);
-                console.log('Object downloaded:', getResult);
-
-                alert(`File uploaded successfully: ${uploadResult.url}`);
-            } catch (error) {
-                console.error('Error:', error);
-                alert('File upload failed');
-            }
-        }
-    </script>
+  <header class="w-header">
+    <a href="index.html"><img src="assets/idg-logo.png" alt="Immersive Design Group"></a>
+    <nav><a href="index.html">Home</a><i>·</i><a href="publications.html">Publications</a><i>·</i><a href="people.html">People</a><i>·</i><a href="showcase.html">Showcase</a><i>·</i><a href="news.html">News</a><i>·</i><a href="join.html">Join</a><i>·</i><a href="contact.html">Contact</a></nav>
+  </header>
+  <main class="w-main">
+    <section class="w-hero intro-hero">
+      <h1>Hi! 안녕하세요!</h1>
+      <p>We are the <strong>Immersive Design Group</strong>, a research group specializing in making, developing, and designing new experiences in the field of Human-Computer Interaction (HCI). We are in the <a href="https://designschool.sustech.edu.cn/">School of Design at SUSTech</a> (Shenzhen, China).</p>
+    </section>
+    <section class="w-section research-intro">
+      <header><h2>Our Research</h2></header>
+      <p class="research-statement"><strong>We are interested in designing at the intersection of human and computer, hardware and software, virtual and real.</strong></p>
+      <p>Our research vision is to enrich and diversify the interaction between users and computers by creating novel experiences with emerging technology. Our research involves understanding users in relation to the new types of interfaces, designing appropriate interactions using design methods, and developing unique devices as well as systems. Current research topics include VR/AR/MR, Haptics, Multimodal Interaction, and Data Physicalization.</p>
+    </section>
+    <section class="w-section">
+      <header><h2>Recent Publications</h2><a href="publications.html">View all</a></header>
+      <div class="w-pubs" data-content="publications"></div>
+    </section>
+    <section class="w-section">
+      <header><h2>Latest News</h2><a href="news.html">View all</a></header>
+      <div class="w-news" data-content="news"></div>
+    </section>
+    <section class="w-section recruitment">
+      <div class="recruitment-side"><p class="recruitment-label">Join the group</p><div class="recruitment-actions"><a href="join.html">View Join us</a></div></div>
+      <div class="recruitment-content">
+        <h2>Interested in working with us?</h2>
+        <p>We welcome exceptional students and researchers across Human-Computer Interaction, Industrial Design, Computer Science, Electrical Engineering, and Mechanical Engineering.</p>
+        <p class="friendly-note">Questions are always welcome. <span>seungwoo@sustech.edu.cn</span></p>
+      </div>
+    </section>
+  </main>
+  <footer class="w-footer"><img src="assets/idg-logo.png" alt=""><p>© 2026 Immersive Design Group · SUSTech School of Design</p></footer>
+  <script src="content-data.js"></script><script src="site-render.js"></script><script src="header.js"></script>
 </body>
-
 </html>

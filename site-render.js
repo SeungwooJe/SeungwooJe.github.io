@@ -1,0 +1,4 @@
+const C=window.SITE_CONTENT,safe=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const r=document.querySelector('[data-content="research"]');if(r)r.innerHTML=C.research.map(x=>`<article><div class="w-image ${safe(x.tone)}">${safe(x.tag)}</div><h3>${safe(x.title)}</h3></article>`).join('');
+const p=document.querySelector('[data-content="publications"]');if(p)p.innerHTML=C.publications.filter(x=>x.authors.trim().endsWith('Seungwoo Je')).slice(0,3).map(x=>`<article><h3>${safe(x.title)}</h3><p>${safe(x.authors)}</p><b>${safe(x.venue)}</b></article>`).join('');
+const n=document.querySelector('[data-content="news"]');if(n)n.innerHTML=C.news.slice(0,3).map(x=>`<div class="home-news-row"><time>${safe(x.date)}</time><span><b>${safe(x.title)}</b> · ${safe(x.summary)}</span></div>`).join('');
