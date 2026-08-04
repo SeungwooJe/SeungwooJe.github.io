@@ -2,8 +2,8 @@
 window.SITE_CONTENT={
   research:[],
   publications:[
-    {title:'ExtenString: Enhancing String-Based Interaction with Virtual Screens through Remapping',authors:'Han Shi, Hanzhong Luo, Xuesong Zhang, Qianyuan Zou, HyeonBeom Yi, Seungwoo Je†',venue:'In Proceedings of UIST 2026.'},
-    {title:'MagicPen: Enabling Dynamic Physical Scaffolding through Haptic Feedback for 3D Content Creation in VR with a Variable-length Stylus',authors:'Zhicheng Wang, Tianze Xie, Yilong Lin, Xuesong Zhang, Daniele Giunchi, Eyal Ofek, Seungwoo Je†',venue:'In Proceedings of UIST 2026.'},
+    {title:'ExtenString: Enhancing String-Based Interaction with Virtual Screens through Remapping',authors:'Han Shi, Hanzhong Luo, Xuesong Zhang, Qianyuan Zou, HyeonBeom Yi, Seungwoo Je',venue:'In Proceedings of UIST 2026.'},
+    {title:'MagicPen: Enabling Dynamic Physical Scaffolding through Haptic Feedback for 3D Content Creation in VR with a Variable-length Stylus',authors:'Zhicheng Wang, Tianze Xie, Yilong Lin, Xuesong Zhang, Daniele Giunchi, Eyal Ofek, Seungwoo Je',venue:'In Proceedings of UIST 2026.'},
     {title:'SwapSense: Reusable Vision-Based Contact Force Sensing Across Swappable Passive Haptic Modules',authors:'Minha Jeon, Yeseo Park, Inhyuk Song, Yilong Lin, Seungwoo Je, Seungjae Oh',venue:'In Proceedings of UIST 2026.'},
     {title:'GroundedReach: Enabling Body-grounded Haptic Experience in Virtual Reality with an Elbow Wearable Haptic Device',authors:'Yilong Lin, Tianze Xie, Yuxin Ma, Daniele Giunchi, Mike J. Sinclair, Seungwoo Je, Eyal Ofek',venue:'IEEE Transactions on Visualization and Computer Graphics (IEEE ISMAR 2026), 2026, SCIE.'},
     {title:'The Effect of Building Typology and Visual Complexity on Stress Levels through Amplitude Spectrum Analysis',authors:'Mirna Zordan, Petrus Jacobus Hermanus Maree, Zixian Lei, Tianze Xie, Seungwoo Je',venue:'Building Research & Information, 2026'},
