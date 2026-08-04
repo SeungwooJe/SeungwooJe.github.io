@@ -11,6 +11,7 @@ window.SITE_CONTENT={
     {title:'SoundWeAR: Co-Designing AR Sound Cues to Support Outdoor Awareness for DHH Individuals',authors:'Anna Surovkova*, Tianze Xie*, Xinan Yang, Seungwoo Je',venue:'CHI 2026'}
   ],
   news:[
+    {date:'2026.08.04',kind:'Award',image:'assets/news/reddot-2026.png',title:'Immersive Design Group named a Red Dot Winner 2026',summary:'We are honored to receive the Red Dot Award: Design Concept 2026.'},
     {date:'2026.07.26',kind:'Announcement',tone:'dark',badge:'New<br>Website',title:'Our new website is now live',summary:'Welcome to the new online home of the Immersive Design Group.'},
     {date:'2026.07',kind:'Publication',image:'assets/news/uist-2026.png',title:'Three papers accepted to ACM UIST 2026',summary:'Congratulations to our researchers and collaborators.'},
     {date:'2026.07',kind:'Publication',image:'assets/news/ismar-2026.png',title:'One TVCG journal paper accepted to IEEE ISMAR 2026',summary:'Congratulations to our researchers and collaborators.'},
