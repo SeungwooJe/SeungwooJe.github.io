@@ -48,6 +48,11 @@
   background: #f8f5ef;
 }
 
+.news-thumb.photo img {
+  object-fit: cover;
+  padding: 0;
+}
+
 .news-thumb.yellow {
   background: #ffeb00;
 }
