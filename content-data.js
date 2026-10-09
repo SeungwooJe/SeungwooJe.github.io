@@ -2,6 +2,7 @@
 window.SITE_CONTENT={
   research:[],
   publications:[
+    {title:'Flat2Curve: Interacting with Curved Displays in Virtual Reality using a Flat Physical Pad',authors:'Zhiming Zhang, Zezheng Guan, Han Shi, Weidong Zhang, Xuesong Zhang, Yuxin Ma, Seungwoo Je',venue:'Virtual Reality & Intelligent Hardware, 2026.'},
     {title:'Tactile Voice Timbre: Haptic Speaker Signatures for Captioned Multi-Speaker Video',authors:'HyeonBeom Yi, Han Shi, Seungwoo Je, Chang Hee Lee, Myung Jin Kim, Chi Yoon Jeong, Sungyong Shin',venue:'In Proceedings of UIST 2026 Posters.'},
     {title:'ExtenString: Enhancing String-Based Interaction with Virtual Screens through Remapping',authors:'Han Shi, Hanzhong Luo, Xuesong Zhang, Qianyuan Zou, HyeonBeom Yi, Seungwoo Je',venue:'In Proceedings of UIST 2026.'},
     {title:'MagicPen: Enabling Dynamic Physical Scaffolding through Haptic Feedback for 3D Content Creation in VR with a Variable-length Stylus',authors:'Zhicheng Wang, Tianze Xie, Yilong Lin, Xuesong Zhang, Daniele Giunchi, Eyal Ofek, Seungwoo Je',venue:'In Proceedings of UIST 2026.'},
