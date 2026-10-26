@@ -13,6 +13,7 @@ window.SITE_CONTENT={
     {title:'SoundWeAR: Co-Designing AR Sound Cues to Support Outdoor Awareness for DHH Individuals',authors:'Anna Surovkova*, Tianze Xie*, Xinan Yang, Seungwoo Je',venue:'CHI 2026'}
   ],
   news:[
+    {date:'2026.10.12',kind:'Talk',image:'assets/news/polyu-beyond-real-2026.jpg',title:'Seungwoo Je Gives Beyond Real Talk at PolyU',summary:'Seungwoo Je delivered a talk titled "Beyond Real" as part of the School of Design Research Seminar Series 2026/27 at The Hong Kong Polytechnic University on October 12, 2026.'},
     {date:'2026.09.04',kind:'Publication',tone:'dark',badge:'Paper<br>Accepted',title:'One paper accepted to Virtual Reality & Intelligent Hardware',summary:'Congratulations to our researchers and collaborators.'},
     {date:'2026.08.19',kind:'Publication',image:'assets/news/uist-2026.png',title:'One Poster accepted to ACM UIST 2026',summary:'Congratulations to our researchers and collaborators.'},
     {date:'2026.08.10',kind:'Visit',tone:'photo',image:'assets/news/tukorea-visit-2026.jpg',title:'Professors from Tech University of Korea Visit Our Group',summary:'We welcomed professors from Tech University of Korea to our group for an inspiring exchange of ideas and research.'},
