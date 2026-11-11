@@ -2,7 +2,7 @@
 window.SITE_CONTENT={
   research:[],
   publications:[
-    {title:'Flat2Curve: Interacting with Curved Displays in Virtual Reality using a Flat Physical Pad',authors:'Zhiming Zhang, Zezheng Guan, Han Shi, Weidong Zhang, Xuesong Zhang, Yuxin Ma, Seungwoo Je',venue:'Virtual Reality & Intelligent Hardware, 2026.'},
+    {title:'Flat2Curve: Interacting with Curved Displays in Virtual Reality using a Flat Physical Pad',authors:'Zhiming Zhang, Zezheng Guan, Han Shi, Weidong Zhang, Xuesong Zhang, Yuxin Ma, Seungwoo Je',venue:'Virtual Reality & Intelligent Hardware (Accepted).'},
     {title:'Tactile Voice Timbre: Haptic Speaker Signatures for Captioned Multi-Speaker Video',authors:'HyeonBeom Yi, Han Shi, Seungwoo Je, Chang Hee Lee, Myung Jin Kim, Chi Yoon Jeong, Sungyong Shin',venue:'In Proceedings of UIST 2026 Posters.'},
     {title:'ExtenString: Enhancing String-Based Interaction with Virtual Screens through Remapping',authors:'Han Shi, Hanzhong Luo, Xuesong Zhang, Qianyuan Zou, HyeonBeom Yi, Seungwoo Je',venue:'In Proceedings of UIST 2026.'},
     {title:'MagicPen: Enabling Dynamic Physical Scaffolding through Haptic Feedback for 3D Content Creation in VR with a Variable-length Stylus',authors:'Zhicheng Wang, Tianze Xie, Yilong Lin, Xuesong Zhang, Daniele Giunchi, Eyal Ofek, Seungwoo Je',venue:'In Proceedings of UIST 2026.'},
@@ -13,6 +13,7 @@ window.SITE_CONTENT={
     {title:'SoundWeAR: Co-Designing AR Sound Cues to Support Outdoor Awareness for DHH Individuals',authors:'Anna Surovkova*, Tianze Xie*, Xinan Yang, Seungwoo Je',venue:'CHI 2026'}
   ],
   news:[
+    {date:'2026.11.11',kind:'Publication',tone:'dark',badge:'Paper<br>Accepted',title:'EchoYourMove accepted to IJHCI',summary:'EchoYourMove: Exploring Audio Feedback in Virtual Avatar Co-embodiment was accepted for publication in the International Journal of Human-Computer Interaction.'},
     {date:'2026.10.12',kind:'Talk',image:'assets/news/polyu-beyond-real-2026.jpg',title:'Prof. Je Gives Beyond Real Talk at PolyU',summary:'Prof. Je delivered a talk titled "Beyond Real" as part of the School of Design Research Seminar Series 2026/27 at The Hong Kong Polytechnic University.'},
     {date:'2026.09.17',kind:'Talk',image:'assets/news/nrf-aspire-workshop-2026.jpg',title:'Prof. Je Gives Invited Talk at the 2026 NRF-ASPIRE Workshop',summary:'Prof. Je delivered an invited talk titled "Beyond Real" at the 2026 NRF-ASPIRE Workshop, "Listening through the Body: Augmenting Experience through Visual, Auditory, and Haptic Interaction", held at KAIST Dogok Campus in Seoul, Korea.'},
     {date:'2026.09.04',kind:'Publication',tone:'dark',badge:'Paper<br>Accepted',title:'One paper accepted to Virtual Reality & Intelligent Hardware',summary:'Congratulations to our researchers and collaborators.'},
